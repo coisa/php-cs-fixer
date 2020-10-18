@@ -81,7 +81,7 @@ abstract class PhpCsFixer
     /**
      * @return Config
      */
-    private static function createConfig(array $rules = array()): Config
+    private static function createConfig(array $rules = array())
     {
         return Config::create()
             ->setRiskyAllowed(true)
