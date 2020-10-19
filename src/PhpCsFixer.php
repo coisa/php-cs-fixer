@@ -7,17 +7,19 @@
  * with this source code in the file LICENSE.
  *
  * @link      https://github.com/coisa/php-cs-fixer
+ *
  * @copyright Copyright (c) 2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
-
 namespace CoiSA\PhpCsFixer;
 
 use PhpCsFixer\Config;
 use PhpCsFixer\Finder;
+use PhpCsFixer\Fixer\FixerInterface;
+use PhpCsFixer\FixerFactory;
 
 /**
- * Class PhpCsFixer
+ * Class PhpCsFixer.
  *
  * @package CoiSA\PhpCsFixer
  */
@@ -66,8 +68,8 @@ abstract class PhpCsFixer
                 continue;
             }
 
-            if (\substr($path, 0, 1) === '!') {
-                $finder->exclude(\substr($path, 1));
+            if (\mb_substr($path, 0, 1) === '!') {
+                $finder->exclude(\mb_substr($path, 1));
 
                 continue;
             }
@@ -105,10 +107,24 @@ abstract class PhpCsFixer
             );
         }
 
-        $rules = include(__DIR__ . '/../config/rules.php');
+        $rules = include __DIR__ . '/../config/rules.php';
 
         if (!$header) {
             $rules['header_comment'] = false;
+        }
+
+        $fixerFactory = new FixerFactory();
+        $fixerFactory->registerBuiltInFixers();
+
+        /** @var stringarray() $availableFixers */
+        $availableFixers = \array_map(function(FixerInterface $fixer) {
+            return $fixer->getName();
+        }, $fixerFactory->getFixers());
+
+        foreach ($rules as $fixer => $rule) {
+            if (false === \in_array($fixer, $availableFixers)) {
+                unset($rules[$fixer]);
+            }
         }
 
         return $rules;

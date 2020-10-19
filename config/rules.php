@@ -7,22 +7,37 @@
  * with this source code in the file LICENSE.
  *
  * @link      https://github.com/coisa/php-cs-fixer
+ *
  * @copyright Copyright (c) 2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
 return array(
+    '@DoctrineAnnotation'     => true,
+    '@PHP56Migration'         => (float) PHP_VERSION >= 5.6,
+    '@PHP56Migration:risky'   => (float) PHP_VERSION >= 5.6,
+    '@PHP70Migration'         => (float) PHP_VERSION >= 7.0,
+    '@PHP70Migration:risky'   => (float) PHP_VERSION >= 7.0,
+    '@PHP71Migration'         => (float) PHP_VERSION >= 7.1,
+    '@PHP71Migration:risky'   => (float) PHP_VERSION >= 7.1,
+    '@PHP73Migration'         => (float) PHP_VERSION >= 7.3,
+    '@PHP74Migration'         => (float) PHP_VERSION >= 7.4,
+    '@PHP74Migration:risky'   => (float) PHP_VERSION >= 7.4,
+    '@PHP8Migration'          => (float) PHP_VERSION >= 8,
+    '@PHP8Migration:risky'    => (float) PHP_VERSION >= 8,
     '@PSR2'                   => true,
+    'align_double_arrow'      => true,
     'align_multiline_comment' => true,
     'array_indentation'       => true,
     'array_syntax'            => array(
-        'syntax' => 'long',
+        'syntax' => (float) PHP_VERSION >= 5.4 ? 'short' : 'long',
     ),
     'binary_operator_spaces' => array(
         'align_double_arrow' => true,
         'align_equals'       => true,
     ),
     'blank_line_after_opening_tag' => true,
+    'blank_line_before_return'     => true,
     'blank_line_before_statement'  => array(
         'statements' => array(
             'break',
@@ -105,6 +120,7 @@ return array(
     'logical_operators'                  => true,
     'lowercase_cast'                     => true,
     'magic_constant_casing'              => true,
+    'mb_str_functions'                   => true,
     'modernize_types_casting'            => true,
     'native_function_casing'             => true,
     'native_function_invocation'         => true,
@@ -162,21 +178,25 @@ return array(
     'phpdoc_align'                        => true,
     'phpdoc_annotation_without_dot'       => true,
     'phpdoc_indent'                       => true,
+    'phpdoc_inline_tag'                   => true,
+    'phpdoc_no_alias_tag'                 => true,
     'phpdoc_no_access'                    => true,
     'phpdoc_no_empty_return'              => false,
     'phpdoc_no_package'                   => false,
+    'phpdoc_no_useless_inheritdoc'        => true,
     'phpdoc_order'                        => true,
     'phpdoc_return_self_reference'        => true,
     'phpdoc_scalar'                       => true,
     'phpdoc_separation'                   => true,
     'phpdoc_single_line_var_spacing'      => true,
+    'phpdoc_summary'                      => true,
     'phpdoc_to_comment'                   => true,
     'phpdoc_trim'                         => true,
     'phpdoc_types'                        => true,
     'phpdoc_types_order'                  => true,
     'phpdoc_var_without_name'             => true,
-    'pow_to_exponentiation'               => true,
     'protected_to_private'                => true,
+    'random_api_migration'                => true,
     'return_type_declaration'             => array(
         'space_before' => 'none',
     ),
