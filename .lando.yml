@@ -1,6 +1,6 @@
 # https://docs.lando.dev/
 
-name: service-provider
+name: php-cs-fixer
 
 services:
   php:
