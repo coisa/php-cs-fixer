@@ -4,18 +4,19 @@ name: php-cs-fixer
 
 services:
   php:
-    type: php:5.3
+    type: php
     via: cli
     build_as_root:
       - docker-php-ext-enable xdebug
+    overrides:
+      environment:
+        XDEBUG_MODE: coverage
 
 tooling:
   php:
     service: php
-    description: Runs with php 5.3
     cmd: php
 
   composer:
     service: php
-    description: Runs composer with php 5.3
     cmd: composer
