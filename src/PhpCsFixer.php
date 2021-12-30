@@ -7,13 +7,14 @@
  * with this source code in the file LICENSE.
  *
  * @link      https://github.com/coisa/php-cs-fixer
- *
- * @copyright Copyright (c) 2020 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
+ * @copyright Copyright (c) 2020-2021 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
+
 namespace CoiSA\PhpCsFixer;
 
 use PhpCsFixer\Config;
+use PhpCsFixer\ConfigInterface;
 use PhpCsFixer\Finder;
 use PhpCsFixer\Fixer\FixerInterface;
 use PhpCsFixer\FixerFactory;
@@ -29,9 +30,9 @@ abstract class PhpCsFixer
      * @param array  $paths
      * @param string $header
      *
-     * @return \PhpCsFixer\ConfigInterface
+     * @return ConfigInterface
      */
-    public static function create(array $paths = array(), $header = '')
+    public static function create(array $paths = [], $header = '')
     {
         $rules  = self::createRules($header);
         $config = self::createConfig($rules);
@@ -50,7 +51,7 @@ abstract class PhpCsFixer
      *
      * @return Finder
      */
-    private static function createFinder(array $paths = array())
+    private static function createFinder(array $paths = [])
     {
         $finder = Finder::create()
             ->files()
@@ -58,18 +59,18 @@ abstract class PhpCsFixer
             ->notPath('vendor/');
 
         foreach ($paths as $path) {
-            if (!\file_exists($path)) {
+            if (!file_exists($path)) {
                 continue;
             }
 
-            if (\is_file($path)) {
-                $finder->append(array($path));
+            if (is_file($path)) {
+                $finder->append([$path]);
 
                 continue;
             }
 
-            if (\mb_substr($path, 0, 1) === '!') {
-                $finder->exclude(\mb_substr($path, 1));
+            if (mb_substr($path, 0, 1) === '!') {
+                $finder->exclude(mb_substr($path, 1));
 
                 continue;
             }
@@ -81,11 +82,13 @@ abstract class PhpCsFixer
     }
 
     /**
-     * @return Config
+     * @return ConfigInterface
      */
-    private static function createConfig(array $rules = array())
+    private static function createConfig(array $rules = [])
     {
-        return Config::create()
+        $config = new Config();
+
+        return $config
             ->setRiskyAllowed(true)
             ->setRules($rules);
     }
@@ -98,10 +101,10 @@ abstract class PhpCsFixer
     private static function createRules($header = '')
     {
         if ($header) {
-            $header = \trim(
-                \preg_replace(
-                    array('!^/\*\*\n!', '! \*/!', '! \* ?!', '!%year%!', '!' . \date('Y-Y') . '!'),
-                    array(null, null, null, \date('Y'), \date('Y')),
+            $header = trim(
+                preg_replace(
+                    ['!^/\*\*\n!', '! \*/!', '! \* ?!', '!%year%!', '!' . date('Y-Y') . '!'],
+                    [null, null, null, date('Y'), date('Y')],
                     $header
                 )
             );
@@ -117,7 +120,7 @@ abstract class PhpCsFixer
         $fixerFactory->registerBuiltInFixers();
 
         /** @var stringarray() $availableFixers */
-        $availableFixers = \array_map(function(FixerInterface $fixer) {
+        $availableFixers = array_map(function(FixerInterface $fixer) {
             return $fixer->getName();
         }, $fixerFactory->getFixers());
 

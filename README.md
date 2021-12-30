@@ -10,7 +10,7 @@ $ composer require --dev coisa/php-cs-fixer
 
 ## Usage
 
-Create a `.php_cs.dist` file with the following code:
+Create a `.php-cs-fixer.dist.php` file with the following code:
 
 ```php
 <?php
