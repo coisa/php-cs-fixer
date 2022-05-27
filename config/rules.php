@@ -16,16 +16,17 @@ declare(strict_types=1);
 use PhpCsFixer\RuleSet\RuleSet;
 
 $ruleSet = new RuleSet([
-    '@DoctrineAnnotation'   => true,
-    '@PHP74Migration'       => true,
-    '@PHP74Migration:risky' => true,
-    '@PHP80Migration'       => (float) PHP_VERSION >= 8,
-    '@PHP80Migration:risky' => (float) PHP_VERSION >= 8,
-    '@PHP81Migration'       => (float) PHP_VERSION >= 8.1,
-    '@PSR12'                => true,
-    '@PSR12:risky'          => true,
-    '@PhpCsFixer'           => true,
-    '@PhpCsFixer:risky'     => true,
+    '@DoctrineAnnotation'       => true,
+    '@PHP74Migration'           => true,
+    '@PHP74Migration:risky'     => true,
+    '@PHP80Migration'           => (float) PHP_VERSION >= 8,
+    '@PHP80Migration:risky'     => (float) PHP_VERSION >= 8,
+    '@PHP81Migration'           => (float) PHP_VERSION >= 8.1,
+    '@PSR12'                    => true,
+    '@PSR12:risky'              => true,
+    '@PhpCsFixer'               => true,
+    '@PhpCsFixer:risky'         => true,
+    '@PHPUnit84Migration:risky' => true,
 ]);
 
 $rules = $ruleSet->getRules();
