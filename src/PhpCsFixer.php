@@ -7,7 +7,7 @@
  * with this source code in the file LICENSE.
  *
  * @link      https://github.com/coisa/php-cs-fixer
- * @copyright Copyright (c) 2020-2021 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
+ * @copyright Copyright (c) 2020-2022 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
@@ -32,7 +32,7 @@ abstract class PhpCsFixer
      *
      * @return ConfigInterface
      */
-    public static function create(array $paths = [], $header = '')
+    public static function create(array $paths = [], string $header = ''): ConfigInterface
     {
         $rules  = self::createRules($header);
         $config = self::createConfig($rules);
@@ -51,7 +51,7 @@ abstract class PhpCsFixer
      *
      * @return Finder
      */
-    private static function createFinder(array $paths = [])
+    private static function createFinder(array $paths = []): Finder
     {
         $finder = Finder::create()
             ->files()
@@ -84,7 +84,7 @@ abstract class PhpCsFixer
     /**
      * @return ConfigInterface
      */
-    private static function createConfig(array $rules = [])
+    private static function createConfig(array $rules = []): ConfigInterface
     {
         $config = new Config();
 
@@ -119,7 +119,7 @@ abstract class PhpCsFixer
         $fixerFactory = new FixerFactory();
         $fixerFactory->registerBuiltInFixers();
 
-        /** @var stringarray() $availableFixers */
+        /** @var string[] $availableFixers */
         $availableFixers = array_map(function(FixerInterface $fixer) {
             return $fixer->getName();
         }, $fixerFactory->getFixers());

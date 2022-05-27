@@ -5,13 +5,13 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Felipe Sayao Lobato Abreu",
-            "email": "github@felipeabreu.com.br"
+            "name": "Felipe Sayão Lobato Abreu",
+            "email": "github@mentor.dev.br"
         }
     ],
     "require": {
-        "php": "^7.2|^8.0",
-        "friendsofphp/php-cs-fixer": "^3.3"
+        "php": "^7.4 || ^8.0",
+        "friendsofphp/php-cs-fixer": "^3.8"
     },
     "autoload": {
         "psr-4": {
