@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of coisa/php-cs-fixer.
  *
@@ -7,17 +9,13 @@
  * with this source code in the file LICENSE.
  *
  * @link      https://github.com/coisa/php-cs-fixer
- * @copyright Copyright (c) 2020-2021 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
+ * @copyright Copyright (c) 2020-2022 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
 
 namespace CoiSA\PhpCsFixer;
 
-use PhpCsFixer\Config;
 use PhpCsFixer\ConfigInterface;
-use PhpCsFixer\Finder;
-use PhpCsFixer\Fixer\FixerInterface;
-use PhpCsFixer\FixerFactory;
 
 /**
  * Class PhpCsFixer.
@@ -27,109 +25,13 @@ use PhpCsFixer\FixerFactory;
 abstract class PhpCsFixer
 {
     /**
-     * @param array  $paths
-     * @param string $header
-     *
-     * @return ConfigInterface
+     * Create a PhpCsFixer configuration.
      */
-    public static function create(array $paths = [], $header = '')
+    public static function create(array $paths, string $header = '', array $extraRules = []): ConfigInterface
     {
-        $rules  = self::createRules($header);
-        $config = self::createConfig($rules);
-
-        if (empty($paths)) {
-            return $config;
-        }
-
-        $finder = self::createFinder($paths);
+        $finder = new Finder($paths);
+        $config = new Config($header, $extraRules);
 
         return $config->setFinder($finder);
-    }
-
-    /**
-     * @param array $paths
-     *
-     * @return Finder
-     */
-    private static function createFinder(array $paths = [])
-    {
-        $finder = Finder::create()
-            ->files()
-            ->name('*.php')
-            ->notPath('vendor/');
-
-        foreach ($paths as $path) {
-            if (!file_exists($path)) {
-                continue;
-            }
-
-            if (is_file($path)) {
-                $finder->append([$path]);
-
-                continue;
-            }
-
-            if (mb_substr($path, 0, 1) === '!') {
-                $finder->exclude(mb_substr($path, 1));
-
-                continue;
-            }
-
-            $finder->in($path);
-        }
-
-        return $finder;
-    }
-
-    /**
-     * @return ConfigInterface
-     */
-    private static function createConfig(array $rules = [])
-    {
-        $config = new Config();
-
-        return $config
-            ->setRiskyAllowed(true)
-            ->setRules($rules);
-    }
-
-    /**
-     * @param string $header
-     *
-     * @return array
-     */
-    private static function createRules($header = '')
-    {
-        if ($header) {
-            $header = trim(
-                preg_replace(
-                    ['!^/\*\*\n!', '! \*/!', '! \* ?!', '!%year%!', '!' . date('Y-Y') . '!'],
-                    [null, null, null, date('Y'), date('Y')],
-                    $header
-                )
-            );
-        }
-
-        $rules = include __DIR__ . '/../config/rules.php';
-
-        if (!$header) {
-            $rules['header_comment'] = false;
-        }
-
-        $fixerFactory = new FixerFactory();
-        $fixerFactory->registerBuiltInFixers();
-
-        /** @var stringarray() $availableFixers */
-        $availableFixers = array_map(function(FixerInterface $fixer) {
-            return $fixer->getName();
-        }, $fixerFactory->getFixers());
-
-        foreach ($rules as $fixer => $rule) {
-            if (false === \in_array($fixer, $availableFixers)) {
-                unset($rules[$fixer]);
-            }
-        }
-
-        return $rules;
     }
 }

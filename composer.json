@@ -1,24 +1,29 @@
 {
     "name": "coisa/php-cs-fixer",
-    "type": "library",
     "description": "Custom PHP CS Fixer Config",
     "license": "MIT",
+    "type": "library",
     "authors": [
         {
-            "name": "Felipe Sayao Lobato Abreu",
-            "email": "github@felipeabreu.com.br"
+            "name": "Felipe Sayão Lobato Abreu",
+            "email": "github@mentor.dev.br"
         }
     ],
     "require": {
-        "php": "^7.2|^8.0",
-        "friendsofphp/php-cs-fixer": "^3.3"
+        "php": "^7.4 || ^8.0",
+        "friendsofphp/php-cs-fixer": "^3.8"
     },
+    "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
             "CoiSA\\PhpCsFixer\\": "src"
         }
     },
-    "minimum-stability": "stable",
+    "config": {
+        "platform": {
+            "php": "7.4"
+        }
+    },
     "scripts": {
         "cs-check": "php-cs-fixer fix --dry-run --diff",
         "cs-fix": "php-cs-fixer fix"
