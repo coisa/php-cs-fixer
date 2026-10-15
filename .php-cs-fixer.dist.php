@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * This file is part of coisa/php-cs-fixer.
  *
@@ -9,15 +7,20 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  *
  * @link      https://github.com/coisa/php-cs-fixer
- * @copyright Copyright (c) 2020-2022 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
+ * @copyright Copyright (c) 2020-2026 Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
  * @license   https://opensource.org/licenses/MIT MIT License
  */
+
+declare(strict_types=1);
+
+use CoiSA\PhpCsFixer\HeaderExtractor;
+use CoiSA\PhpCsFixer\PhpCsFixer;
 
 $paths = [
     __FILE__,
     __DIR__,
 ];
 
-$header = file_get_contents(__DIR__ . '/.docheader');
+$header = HeaderExtractor::extractFromFile(__FILE__);
 
-return CoiSA\PhpCsFixer\PhpCsFixer::create($paths, $header);
+return PhpCsFixer::create($paths, $header);
