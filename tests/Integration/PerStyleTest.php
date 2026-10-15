@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 namespace CoiSA\PhpCsFixer\Tests\Integration;
 
-use CoiSA\PhpCsFixer\RuleSet\Sets\CustomSet;
+use CoiSA\PhpCsFixer\RuleSet\DefaultSet;
 use PhpCsFixer\FixerFactory;
 use PhpCsFixer\RuleSet\RuleSet;
 use PhpCsFixer\Tokenizer\Tokens;
@@ -24,7 +24,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\RequiresPhp;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(CustomSet::class)]
+#[CoversClass(DefaultSet::class)]
 final class PerStyleTest extends TestCase
 {
     #[DataProvider('per31Examples')]
@@ -81,7 +81,7 @@ final class PerStyleTest extends TestCase
     {
         Tokens::clearCache();
         $tokens = Tokens::fromCode($source);
-        $factory = (new FixerFactory())->registerBuiltInFixers()->useRuleSet(new RuleSet((new CustomSet())->getRules()));
+        $factory = (new FixerFactory())->registerBuiltInFixers()->useRuleSet(new RuleSet((new DefaultSet())->getRules()));
 
         foreach ($factory->getFixers() as $fixer) {
             $fixer->fix(new \SplFileInfo(__FILE__), $tokens);

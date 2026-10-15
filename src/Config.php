@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 namespace CoiSA\PhpCsFixer;
 
-use CoiSA\PhpCsFixer\RuleSet\Sets\CustomSet;
+use CoiSA\PhpCsFixer\RuleSet\DefaultSet;
 use PhpCsFixer\Config as PhpCsFixerConfig;
 
 /**
@@ -35,7 +35,7 @@ final class Config extends PhpCsFixerConfig
     {
         parent::__construct();
 
-        $ruleSet = new CustomSet($header);
+        $ruleSet = new DefaultSet($header);
 
         $rules = array_merge(
             [$ruleSet->getName() => true],

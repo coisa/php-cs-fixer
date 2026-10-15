@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace CoiSA\PhpCsFixer\Tests\Integration;
 
 use CoiSA\PhpCsFixer\HeaderExtractor;
-use CoiSA\PhpCsFixer\RuleSet\Sets\CustomSet;
+use CoiSA\PhpCsFixer\RuleSet\DefaultSet;
 use CoiSA\PhpCsFixer\Tests\FilesystemTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -50,12 +50,12 @@ final class HeaderExtractorTest extends FilesystemTestCase
     {
         $path = $this->writeFile('config.php', '<?php /** Copyright (c) 2020-2021 Example */ return [];');
         $extractor = new HeaderExtractor();
-        $first = (new CustomSet($extractor->extractFromFile($path)))->getRules()['header_comment']['header'];
+        $first = (new DefaultSet($extractor->extractFromFile($path)))->getRules()['header_comment']['header'];
 
         self::assertSame('Copyright (c) 2020-' . date('Y') . ' Example', $first);
 
         file_put_contents($path, '<?php /** ' . $first . ' */ return [];');
-        $second = (new CustomSet($extractor->extractFromFile($path)))->getRules()['header_comment']['header'];
+        $second = (new DefaultSet($extractor->extractFromFile($path)))->getRules()['header_comment']['header'];
 
         self::assertSame($first, $second);
     }

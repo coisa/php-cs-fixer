@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 namespace CoiSA\PhpCsFixer\Tests\Unit;
 
-use CoiSA\PhpCsFixer\RuleSet\Sets\CustomSet;
+use CoiSA\PhpCsFixer\RuleSet\DefaultSet;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -23,8 +23,8 @@ use PHPUnit\Framework\TestCase;
 /**
  * @internal
  */
-#[CoversClass(CustomSet::class)]
-final class CustomSetTest extends TestCase
+#[CoversClass(DefaultSet::class)]
+final class DefaultSetTest extends TestCase
 {
     #[DataProvider('provideNormalizesOnlyCompleteWrappedHeadersCases')]
     public function testNormalizesOnlyCompleteWrappedHeaders(string $input, string $expected): void
@@ -33,7 +33,7 @@ final class CustomSetTest extends TestCase
             'header' => $expected,
             'comment_type' => 'PHPDoc',
             'location' => 'after_open',
-        ], (new CustomSet($input))->getRules()['header_comment']);
+        ], (new DefaultSet($input))->getRules()['header_comment']);
     }
 
     public static function provideNormalizesOnlyCompleteWrappedHeadersCases(): iterable
@@ -66,7 +66,7 @@ final class CustomSetTest extends TestCase
     #[DataProvider('provideOmitsTheHeaderRuleForEmptyHeadersCases')]
     public function testOmitsTheHeaderRuleForEmptyHeaders(string $header): void
     {
-        self::assertArrayNotHasKey('header_comment', (new CustomSet($header))->getRules());
+        self::assertArrayNotHasKey('header_comment', (new DefaultSet($header))->getRules());
     }
 
     public static function provideOmitsTheHeaderRuleForEmptyHeadersCases(): iterable
@@ -86,13 +86,13 @@ final class CustomSetTest extends TestCase
 
         self::assertSame(
             'Copyright ' . $year . ' / ' . $year . ' / ' . $previousYear . '-' . $year,
-            (new CustomSet($header))->getRules()['header_comment']['header'],
+            (new DefaultSet($header))->getRules()['header_comment']['header'],
         );
     }
 
     public function testUsesAutomaticProjectMigrationsWithExplicitPer31Policies(): void
     {
-        $set = new CustomSet();
+        $set = new DefaultSet();
         $rules = $set->getRules();
 
         self::assertSame('@CoiSA/default', $set->getName());
@@ -117,7 +117,7 @@ final class CustomSetTest extends TestCase
     #[DataProvider('copyrightYears')]
     public function testRefreshesCopyrightYearsWithoutChangingOtherDates(string $input, string $expected): void
     {
-        self::assertSame($expected, (new CustomSet($input))->getRules()['header_comment']['header']);
+        self::assertSame($expected, (new DefaultSet($input))->getRules()['header_comment']['header']);
     }
 
     public static function copyrightYears(): iterable

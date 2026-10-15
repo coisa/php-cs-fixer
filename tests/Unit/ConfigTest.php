@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace CoiSA\PhpCsFixer\Tests\Unit;
 
 use CoiSA\PhpCsFixer\Config;
-use CoiSA\PhpCsFixer\RuleSet\Sets\CustomSet;
+use CoiSA\PhpCsFixer\RuleSet\DefaultSet;
 use PhpCsFixer\RuleSet\RuleSetDefinitionInterface;
 use PhpCsFixer\RuleSet\RuleSets;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -32,10 +32,10 @@ final class ConfigTest extends TestCase
     {
         $config = new Config();
 
-        self::assertSame([CustomSet::NAME => true], $config->getRules());
+        self::assertSame([DefaultSet::NAME => true], $config->getRules());
         self::assertCount(1, $config->getCustomRuleSets());
         self::assertInstanceOf(RuleSetDefinitionInterface::class, $config->getCustomRuleSets()[0]);
-        self::assertSame(CustomSet::NAME, $config->getCustomRuleSets()[0]->getName());
+        self::assertSame(DefaultSet::NAME, $config->getCustomRuleSets()[0]->getName());
         self::assertTrue($config->getRiskyAllowed());
     }
 
@@ -62,13 +62,13 @@ final class ConfigTest extends TestCase
         $overrides = ['concat_space' => ['spacing' => 'one'], 'header_comment' => false];
         $config = new Config('Preset header', $overrides);
 
-        self::assertSame([CustomSet::NAME => true, ...$overrides], $config->getRules());
+        self::assertSame([DefaultSet::NAME => true, ...$overrides], $config->getRules());
     }
 
     public function testApplicationCanDisableThePreset(): void
     {
-        $config = new Config('', [CustomSet::NAME => false, 'concat_space' => false]);
+        $config = new Config('', [DefaultSet::NAME => false, 'concat_space' => false]);
 
-        self::assertSame([CustomSet::NAME => false, 'concat_space' => false], $config->getRules());
+        self::assertSame([DefaultSet::NAME => false, 'concat_space' => false], $config->getRules());
     }
 }

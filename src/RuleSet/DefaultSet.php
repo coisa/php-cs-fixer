@@ -13,16 +13,16 @@
 
 declare(strict_types=1);
 
-namespace CoiSA\PhpCsFixer\RuleSet\Sets;
+namespace CoiSA\PhpCsFixer\RuleSet;
 
 use PhpCsFixer\RuleSet\RuleSetDefinitionInterface;
 
 /**
- * Class CustomSet.
+ * Class DefaultSet.
  *
- * @package CoiSA\PhpCsFixer\RuleSet\Sets
+ * @package CoiSA\PhpCsFixer\RuleSet
  */
-final class CustomSet implements RuleSetDefinitionInterface
+final class DefaultSet implements RuleSetDefinitionInterface
 {
     /**
      * @var string

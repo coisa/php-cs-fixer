@@ -8,6 +8,8 @@
 - Register definitions on each configuration through the supported API, preserving
   independent header/rule choices without reflection or constructor global mutation.
 - Remove the unused global-registration adapter `RuleSet\RuleSets`.
+- Rename `RuleSet\Sets\CustomSet` to `RuleSet\DefaultSet`, matching the default
+  preset and removing the redundant namespace level.
 - Use `@auto` with explicit risky PHP migrations, following the consumer's
   Composer PHP minimum rather than the host runtime, and retain application-last overrides.
 - Enable `date_time_immutable` in the CoiSA preset.

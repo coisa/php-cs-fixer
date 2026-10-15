@@ -104,9 +104,11 @@ operations, property unsetting and literal string contents.
 
 - Require PHP 8.3+ and remove any application platform override forcing PHP 7.4.
 - The custom preset is now named `@CoiSA/default`, satisfying the public custom
-  rule-set naming contract. Consumers of `CustomSet::NAME` pick it up automatically;
+  rule-set naming contract. Consumers of `DefaultSet::NAME` pick it up automatically;
   replace any manually written `@CoiSA` rule key.
-- `CustomSet` implements `RuleSetDefinitionInterface`; it no longer extends the
+- `CoiSA\PhpCsFixer\RuleSet\Sets\CustomSet` becomes
+  `CoiSA\PhpCsFixer\RuleSet\DefaultSet`; update any direct imports.
+  `DefaultSet` implements `RuleSetDefinitionInterface` instead of extending the
   removed internal `AbstractRuleSetDescription`.
 - `Config` uses the supported per-configuration `registerCustomRuleSets()` API.
   The unused `RuleSet\RuleSets` global-registration adapter is removed. Consumers
