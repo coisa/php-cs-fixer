@@ -63,7 +63,9 @@ return PhpCsFixer::create(
 );
 ```
 
-Header text can be raw text or a PHPDoc block. `%year%` is replaced with the
+Header text can be raw text or a complete block comment. Comment delimiters and
+line stars are stripped only from a single complete block. Raw text retains its
+asterisks, comment-like suffixes and whitespace. `%year%` is replaced with the
 current year. Every configuration retains its own header and overrides;
 constructing a configuration does not mutate PHP CS Fixer's global registry.
 The third argument overrides preset rules last, including explicit `false`.

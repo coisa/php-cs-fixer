@@ -37,15 +37,24 @@ final class CustomSet implements RuleSetDefinitionInterface
     /**
      * Normalizes an optional file header, resolving its year placeholder.
      *
-     * @param string $header header text or a complete PHPDoc block
+     * @param string $header raw header text or a complete block comment
      */
     public function __construct(string $header = '')
     {
-        $header       = preg_replace('!\A/\*\*?|\*/\z!', '', trim($header)) ?? '';
-        $header       = preg_replace('/^[\t ]*\*[\t ]?/m', '', $header) ?? '';
+        $wrapped = trim($header);
+        if (str_starts_with($wrapped, '/*') && str_ends_with($wrapped, '*/')
+            && strpos($wrapped, '*/') === \strlen($wrapped) - 2) {
+            $header = substr($wrapped, 2, -2);
+            if (str_starts_with($header, '*')) {
+                $header = substr($header, 1);
+            }
+            $header = trim(preg_replace('/^[\t ]*\*[\t ]?/m', '', $header) ?? '');
+        } elseif ('' === $wrapped) {
+            $header = '';
+        }
         $year         = date('Y');
         $header       = str_replace('%year%', $year, $header);
-        $this->header = trim(str_replace($year . '-' . $year, $year, $header));
+        $this->header = str_replace($year . '-' . $year, $year, $header);
     }
 
     /**

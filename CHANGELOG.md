@@ -12,6 +12,8 @@
   existing risky CoiSA policy and application-last overrides.
 - Fix !directory exclusions being skipped by the existence check.
 - Normalize raw, single-line and multiline PHPDoc headers, including the nonempty header `0`.
+- Preserve raw header asterisks, suffixes and whitespace; strip comment syntax only
+  from a single complete block.
 - Add bounded CLI/behavior/idempotency regressions and a PHP 8.3–8.5 dependency matrix.
 - Refresh migration, header, override, risk and package-distribution guidance.
 - Target PER 3.1 with versioned PER 3.0 tooling and an explicit manual delta checklist;

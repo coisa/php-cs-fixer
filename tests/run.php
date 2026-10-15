@@ -88,6 +88,10 @@ verify(false === $first->getRules()['concat_space'], 'Application overrides must
 verify($first->getRiskyAllowed(), 'The existing opt-in CoiSA risky policy changed.');
 verify($first->getCustomRuleSets()[0]->getRules()['header_comment']['header'] === 'First ' . date('Y'), 'One-line PHPDoc header normalization failed.');
 verify('Raw header' === (new CustomSet('Raw header'))->getRules()['header_comment']['header'], 'Raw header normalization failed.');
+foreach (['* Important', 'Raw header */', '/** Incomplete raw', "/** first */\n/** second */", "Raw\n * Important\nraw suffix */", '  Raw header  '] as $rawHeader) {
+    verify($rawHeader === (new CustomSet($rawHeader))->getRules()['header_comment']['header'], 'Raw header contents were stripped: ' . $rawHeader);
+}
+verify('Plain block' === (new CustomSet('/* Plain block */'))->getRules()['header_comment']['header'], 'Plain block header normalization failed.');
 verify('0' === (new CustomSet('0'))->getRules()['header_comment']['header'], 'A nonempty zero header was lost.');
 verify((new CustomSet())->isRisky(), 'The definition must declare its risky rules.');
 (new RuleSets())->setRuleSetDefinition(new CustomSet());
