@@ -58,7 +58,7 @@ declare(strict_types=1);
 use CoiSA\PhpCsFixer\HeaderExtractor;
 use CoiSA\PhpCsFixer\PhpCsFixer;
 
-$header = (new HeaderExtractor())->extractFromFile(__FILE__);
+$header = HeaderExtractor::extractFromFile(__FILE__);
 
 return PhpCsFixer::create(
     [__DIR__ . '/src'],
@@ -67,7 +67,8 @@ return PhpCsFixer::create(
 );
 ```
 
-`HeaderExtractor` reads PHP tokens without executing the file. It selects only
+`HeaderExtractor` is a static utility with a private constructor. Its methods read
+PHP tokens without executing the file. It selects only
 the opening block comment before declarations or executable code, and returns
 an empty string when there is no such header. An unreadable file raises a
 `RuntimeException`. No separate header file is needed.

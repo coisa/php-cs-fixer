@@ -28,34 +28,32 @@ final class HeaderExtractorTest extends FilesystemTestCase
         $header = '/** Copyright (c) 2020-%year% Example */';
         $path = $this->writeFile('config.php', "<?php\n" . $header . "\nthrow new RuntimeException('Must not execute.');");
 
-        self::assertSame($header, (new HeaderExtractor())->extractFromFile($path));
+        self::assertSame($header, HeaderExtractor::extractFromFile($path));
     }
 
     public function testReturnsNoHeaderForAnEmptyFile(): void
     {
         $path = $this->writeFile('empty.php', '');
 
-        self::assertSame('', (new HeaderExtractor())->extractFromFile($path));
+        self::assertSame('', HeaderExtractor::extractFromFile($path));
     }
 
     public function testReportsAnUnreadableConfiguration(): void
     {
-        $extractor = new HeaderExtractor();
         $this->expectException(\RuntimeException::class);
 
-        $extractor->extractFromFile($this->directory . '/missing.php');
+        HeaderExtractor::extractFromFile($this->directory . '/missing.php');
     }
 
     public function testRenderedCopyrightRemainsDynamicWhenReadAgain(): void
     {
         $path = $this->writeFile('config.php', '<?php /** Copyright (c) 2020-2021 Example */ return [];');
-        $extractor = new HeaderExtractor();
-        $first = (new DefaultSet($extractor->extractFromFile($path)))->getRules()['header_comment']['header'];
+        $first = (new DefaultSet(HeaderExtractor::extractFromFile($path)))->getRules()['header_comment']['header'];
 
         self::assertSame('Copyright (c) 2020-' . date('Y') . ' Example', $first);
 
         file_put_contents($path, '<?php /** ' . $first . ' */ return [];');
-        $second = (new DefaultSet($extractor->extractFromFile($path)))->getRules()['header_comment']['header'];
+        $second = (new DefaultSet(HeaderExtractor::extractFromFile($path)))->getRules()['header_comment']['header'];
 
         self::assertSame($first, $second);
     }

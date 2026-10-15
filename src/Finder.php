@@ -18,7 +18,7 @@ namespace CoiSA\PhpCsFixer;
 use PhpCsFixer\Finder as PhpCsFixerFinder;
 
 /**
- * Class PhpCsFixer.
+ * Class Finder.
  *
  * @package CoiSA\PhpCsFixer
  */

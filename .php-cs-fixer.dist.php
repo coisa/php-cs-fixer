@@ -21,6 +21,6 @@ $paths = [
     __DIR__,
 ];
 
-$header = (new HeaderExtractor())->extractFromFile(__FILE__);
+$header = HeaderExtractor::extractFromFile(__FILE__);
 
 return PhpCsFixer::create($paths, $header);

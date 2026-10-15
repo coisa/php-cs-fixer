@@ -26,7 +26,7 @@ final class HeaderExtractorTest extends TestCase
     #[DataProvider('headers')]
     public function testExtractsOnlyTheOpeningBlockComment(string $source, string $expected): void
     {
-        self::assertSame($expected, (new HeaderExtractor())->extract($source));
+        self::assertSame($expected, HeaderExtractor::extract($source));
     }
 
     public static function headers(): iterable

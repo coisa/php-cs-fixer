@@ -42,19 +42,28 @@ final class DefaultSet implements RuleSetDefinitionInterface
     public function __construct(string $header = '')
     {
         $wrapped = trim($header);
+
+        if ('' === $wrapped) {
+            $this->header = '';
+
+            return;
+        }
+
         if (str_starts_with($wrapped, '/*') && str_ends_with($wrapped, '*/')
             && strpos($wrapped, '*/') === \strlen($wrapped) - 2) {
             $header = substr($wrapped, 2, -2);
+
             if (str_starts_with($header, '*')) {
                 $header = substr($header, 1);
             }
+
             $header = trim(preg_replace('/^[\t ]*\*[\t ]?/m', '', $header) ?? '');
-        } elseif ('' === $wrapped) {
-            $header = '';
         }
+
         $year = date('Y');
         $header = str_replace(['%year%-%year%', $year . '-%year%', '%year%-' . $year], '%year%', $header);
         $header = str_replace('%year%', $year, $header);
+
         $header = preg_replace_callback(
             '/(\bcopyright[\t ]+(?:(?:\(c\)|©)[\t ]+)?)(\d{4})(?:[\t ]*(?:-|–)[\t ]*(\d{4}))?\b(?![\t ]*(?:-|–)[\t ]*\d)/i',
             static function (array $match) use ($year): string {
@@ -66,6 +75,7 @@ final class DefaultSet implements RuleSetDefinitionInterface
             },
             $header,
         ) ?? $header;
+
         $this->header = $header;
     }
 
@@ -89,30 +99,35 @@ final class DefaultSet implements RuleSetDefinitionInterface
         $rules = [
             '@auto'                           => true,
             '@autoPHPMigration:risky'          => true,
+
             // PER 3.1 additions not selected by the current PER 3.0 base.
             'no_unneeded_braces'               => true,
             'protected_to_private'             => true,
+
             'date_time_immutable'              => true,
             'no_unset_on_property'             => false,
             'no_trailing_whitespace_in_string' => false,
+            'mb_str_functions'                 => false,
+
             'general_phpdoc_annotation_remove' => [
                 'annotations' => [
                     'author',
                 ],
             ],
-            'mb_str_functions'       => false,
             'phpdoc_no_empty_return' => false,
             'phpdoc_no_package'      => false,
             'simplified_null_return' => true,
         ];
 
-        if ('' !== $this->header) {
-            $rules['header_comment'] = [
-                'header'       => $this->header,
-                'comment_type' => 'PHPDoc',
-                'location'     => 'after_open',
-            ];
+        if ('' === $this->header) {
+            return $rules;
         }
+
+        $rules['header_comment'] = [
+            'header'       => $this->header,
+            'comment_type' => 'PHPDoc',
+            'location'     => 'after_open',
+        ];
 
         return $rules;
     }

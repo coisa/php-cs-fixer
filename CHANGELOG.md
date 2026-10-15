@@ -21,6 +21,8 @@
   from a single complete block.
 - Extract the header from the configuration's opening block comment without
   executing it; remove the separate `.docheader` file.
+- Expose header extraction through static methods with documented contracts,
+  and use early returns and spacing between logical blocks in the header classes.
 - Keep copyright years current after the formatter writes literal dates back to
   the configuration, preserving creation years and other dates.
 - Add PHPUnit 12.5 unit and integration suites, including header regressions,

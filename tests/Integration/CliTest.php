@@ -43,7 +43,7 @@ final class CliTest extends FilesystemTestCase
             . var_export(\dirname(__DIR__, 2) . '/vendor/autoload.php', true)
             . ";\nreturn CoiSA\\PhpCsFixer\\PhpCsFixer::create("
             . var_export([$this->directory . '/input', '!excluded'], true)
-            . ", (new CoiSA\\PhpCsFixer\\HeaderExtractor())->extractFromFile(__FILE__));\n");
+            . ", CoiSA\\PhpCsFixer\\HeaderExtractor::extractFromFile(__FILE__));\n");
     }
 
     public function testDryRunReportsChangesWithoutWritingFiles(): void

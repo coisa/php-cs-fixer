@@ -15,30 +15,64 @@ declare(strict_types=1);
 
 namespace CoiSA\PhpCsFixer;
 
-/** Extracts the opening block comment without executing the configuration. */
+/**
+ * Extracts the opening block comment without executing configuration code.
+ *
+ * @package CoiSA\PhpCsFixer
+ */
 final class HeaderExtractor
 {
-    public function extractFromFile(string $path): string
+    /**
+     * Prevents instantiation of this static utility.
+     */
+    private function __construct() {}
+
+    /**
+     * Reads a configuration file and extracts its opening block comment.
+     *
+     * @param string $path the configuration file to read
+     *
+     * @return string the opening block comment, or an empty string when absent
+     *
+     * @throws \RuntimeException if the file cannot be opened for reading
+     * @throws \LogicException if the path points to a directory
+     */
+    public static function extractFromFile(string $path): string
     {
         $file = new \SplFileObject($path, 'rb');
         $size = $file->getSize();
 
-        return $this->extract($size > 0 ? $file->fread($size) : '');
+        if (0 === $size) {
+            return '';
+        }
+
+        return self::extract($file->fread($size));
     }
 
-    public function extract(string $source): string
+    /**
+     * Extracts only the first block comment before declarations or executable code.
+     *
+     * @param string $source the PHP source to inspect without executing it
+     *
+     * @return string the opening block comment, or an empty string when absent
+     */
+    public static function extract(string $source): string
     {
         foreach (token_get_all($source) as $token) {
-            if (is_array($token) && in_array($token[0], [T_OPEN_TAG, T_WHITESPACE], true)) {
+            if (!is_array($token)) {
+                return '';
+            }
+
+            if (in_array($token[0], [T_OPEN_TAG, T_WHITESPACE], true)) {
                 continue;
             }
 
-            if (is_array($token) && in_array($token[0], [T_COMMENT, T_DOC_COMMENT], true)
-                && str_starts_with($token[1], '/*') && str_ends_with($token[1], '*/')) {
-                return $token[1];
+            if (!in_array($token[0], [T_COMMENT, T_DOC_COMMENT], true)
+                || !str_starts_with($token[1], '/*') || !str_ends_with($token[1], '*/')) {
+                return '';
             }
 
-            return '';
+            return $token[1];
         }
 
         return '';
