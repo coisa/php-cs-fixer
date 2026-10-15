@@ -2,19 +2,24 @@
 
 ## Unreleased — next major
 
-- Require PHP 8.3+ and PHP CS Fixer ^3.95.25, removing the forced PHP 7.4 platform.
+- Require PHP 8.3+ and PHP CS Fixer ^3.95, removing the forced PHP 7.4 platform.
 - Implement the current public rule-set definition interface and use a valid
   namespaced preset identifier, `@CoiSA/default`.
 - Register definitions on each configuration through the supported API, preserving
   independent header/rule choices without reflection or constructor global mutation.
-- Retain explicit global registration through the public API; duplicate names fail.
+- Remove the unused global-registration adapter `RuleSet\RuleSets`.
 - Target PHP 8.3 consistently, use current migration/rule names and preserve the
   existing risky CoiSA policy and application-last overrides.
+- Enable `date_time_immutable` in the CoiSA preset.
+- Disable automatic multibyte substitutions, property-unset rewrites and removal
+  of trailing whitespace inside strings to preserve their behavior and contents.
 - Fix !directory exclusions being skipped by the existence check.
 - Normalize raw, single-line and multiline PHPDoc headers, including the nonempty header `0`.
 - Preserve raw header asterisks, suffixes and whitespace; strip comment syntax only
   from a single complete block.
-- Add bounded CLI/behavior/idempotency regressions and a PHP 8.3–8.5 dependency matrix.
+- Add PHPUnit 12.5 unit and integration suites, including header regressions,
+  configuration isolation and bounded CLI/behavior/idempotency checks, with
+  a PHP 8.3–8.5 dependency matrix.
 - Refresh migration, header, override, risk and package-distribution guidance.
 - Target PER 3.1 with versioned PER 3.0 tooling and an explicit manual delta checklist;
   remove inherited formatting overrides and the fixed PHPUnit 8.4 migration.

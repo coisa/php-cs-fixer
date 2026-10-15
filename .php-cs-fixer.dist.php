@@ -22,4 +22,4 @@ $paths = [
 
 $header = file_get_contents(__DIR__ . '/.docheader');
 
-return PhpCsFixer::create($paths, $header, ['mb_str_functions' => false]);
+return PhpCsFixer::create($paths, $header);

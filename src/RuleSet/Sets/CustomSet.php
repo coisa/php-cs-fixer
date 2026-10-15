@@ -82,13 +82,15 @@ final class CustomSet implements RuleSetDefinitionInterface
             '@PhpCsFixer:risky'          => true,
             '@PER-CS3x0'                 => true,
             '@PER-CS3x0:risky'           => true,
-            'date_time_immutable'              => false,
+            'date_time_immutable'              => true,
+            'no_unset_on_property'             => false,
+            'no_trailing_whitespace_in_string' => false,
             'general_phpdoc_annotation_remove' => [
                 'annotations' => [
                     'author',
                 ],
             ],
-            'mb_str_functions'       => true,
+            'mb_str_functions'       => false,
             'phpdoc_no_empty_return' => false,
             'phpdoc_no_package'      => false,
             'simplified_null_return' => true,

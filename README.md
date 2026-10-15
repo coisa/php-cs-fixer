@@ -2,7 +2,7 @@
 
 CoiSA's opinionated [PHP CS Fixer](https://github.com/PHP-CS-Fixer/PHP-CS-Fixer)
 configuration. This branch prepares an **unreleased major** requiring PHP 8.3+
-and PHP CS Fixer `^3.95.25`. The published 2.1.0 preset uses removed fixer APIs
+and PHP CS Fixer `^3.95`. The published 2.1.0 preset uses removed fixer APIs
 and cannot load with current PHP CS Fixer. Review this migration before upgrading.
 
 ## Installation and use
@@ -81,8 +81,10 @@ vendor/bin/php-cs-fixer fix --dry-run --diff
 ```
 
 A dry-run exit 8 means formatting changes are needed. A successful second pass
-should return 0 with no changes. This package's own configuration disables
-`mb_str_functions` to preserve byte-based output bounds in its subprocess tests.
+should return 0 with no changes.
+The preset enables `date_time_immutable`. It disables `mb_str_functions`,
+`no_unset_on_property` and `no_trailing_whitespace_in_string` to preserve byte
+operations, property unsetting and literal string contents.
 
 ## Migration from 2.1
 
@@ -93,9 +95,9 @@ should return 0 with no changes. This package's own configuration disables
 - `CustomSet` implements `RuleSetDefinitionInterface`; it no longer extends the
   removed internal `AbstractRuleSetDescription`.
 - `Config` uses the supported per-configuration `registerCustomRuleSets()` API.
-  The explicit `RuleSet\RuleSets::setRuleSetDefinition()` adapter remains available
-  with the current definition interface and public registration API. Duplicate
-  global names now throw instead of overwriting internals through reflection.
+  The unused `RuleSet\RuleSets` global-registration adapter is removed. Consumers
+  should create configurations through `PhpCsFixer::create()` or `new Config()`;
+  neither requires global registration.
 - Migration rules always target PHP 8.3. Running the formatter on PHP 8.5 does
   not switch this target to newer PHP syntax. Current upstream preset/rule names
   replace deprecated aliases; additional CoiSA overrides remain in place.
@@ -145,11 +147,20 @@ Keep full checks as well when changing preset/configuration or dependency versio
 
 ## Verification
 
-`composer --no-plugins check` executes bounded fixtures and checks this repository
-with its own preset. Tests cover the current public definition interface,
+`composer --no-plugins check` runs PHPUnit 12.5 and checks this repository with its
+own preset. Run `composer test` for all tests, or select a suite directly:
+
+```sh
+vendor/bin/phpunit --testsuite unit
+vendor/bin/phpunit --testsuite integration
+```
+
+The PHPUnit suites cover the current public definition interface,
 per-configuration header isolation, override precedence, preserved risky policy,
-explicit registration, exclusion behavior, real CLI dry-run/apply, header
+exclusion behavior, real CLI dry-run/apply, header
 normalization, PHP lint, unchanged synthetic output and second-pass idempotency.
+CLI tests use Symfony Process with a timeout and a fresh temporary directory per
+test. Warnings, risky tests and deprecations fail the suite.
 
 CI exercises PHP 8.3 with lowest/highest dependencies and PHP 8.4/8.5 with highest
 dependencies. The local PHP 8.5.11 run uses PHP CS Fixer 3.95.27; actual CI results
