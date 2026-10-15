@@ -5,6 +5,12 @@ This file records notable changes to the project.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and releases use [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.1] - 2026-10-15
+
+### Changed
+
+- Update `actions/checkout` from `v4` to `v7` in the CI and reusable PHP-check workflows.
+
 ## [3.0.0] - 2026-10-15
 
 ### Added
@@ -115,6 +121,7 @@ and releases use [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Opinionated formatting and risky rules, plus optional PHPDoc headers with `%year%` substitution.
 - Composer dependencies on PHP `>=5.3` and PHP CS Fixer `>=2.2`.
 
+[3.0.1]: https://github.com/coisa/php-cs-fixer/compare/3.0.0...3.0.1
 [3.0.0]: https://github.com/coisa/php-cs-fixer/compare/2.1.0...3.0.0
 [2.1.0]: https://github.com/coisa/php-cs-fixer/compare/2.0.0...2.1.0
 [2.0.0]: https://github.com/coisa/php-cs-fixer/compare/1.0.4...2.0.0
