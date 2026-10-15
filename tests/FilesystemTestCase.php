@@ -17,6 +17,9 @@ namespace CoiSA\PhpCsFixer\Tests;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 abstract class FilesystemTestCase extends TestCase
 {
     protected string $directory;

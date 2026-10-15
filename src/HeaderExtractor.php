@@ -35,7 +35,7 @@ final class HeaderExtractor
      * @return string the opening block comment, or an empty string when absent
      *
      * @throws \RuntimeException if the file cannot be opened for reading
-     * @throws \LogicException if the path points to a directory
+     * @throws \LogicException   if the path points to a directory
      */
     public static function extractFromFile(string $path): string
     {
@@ -59,15 +59,15 @@ final class HeaderExtractor
     public static function extract(string $source): string
     {
         foreach (token_get_all($source) as $token) {
-            if (!is_array($token)) {
+            if (!\is_array($token)) {
                 return '';
             }
 
-            if (in_array($token[0], [T_OPEN_TAG, T_WHITESPACE], true)) {
+            if (\in_array($token[0], [T_OPEN_TAG, T_WHITESPACE], true)) {
                 continue;
             }
 
-            if (!in_array($token[0], [T_COMMENT, T_DOC_COMMENT], true)
+            if (!\in_array($token[0], [T_COMMENT, T_DOC_COMMENT], true)
                 || !str_starts_with($token[1], '/*') || !str_ends_with($token[1], '*/')) {
                 return '';
             }

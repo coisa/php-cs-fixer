@@ -97,12 +97,30 @@ final class DefaultSet implements RuleSetDefinitionInterface
     public function getRules(): array
     {
         $rules = [
+            '@PhpCsFixer'                      => true,
+            '@PhpCsFixer:risky'                => true,
             '@auto'                           => true,
             '@autoPHPMigration:risky'          => true,
 
-            // PER 3.1 additions not selected by the current PER 3.0 base.
+            // Preserve PER layout and its available 3.1 additions across presets.
             'no_unneeded_braces'               => true,
             'protected_to_private'             => true,
+            'no_unneeded_control_parentheses'  => [
+                'statements' => [
+                    'break',
+                    'continue',
+                    'echo_print',
+                    'negative_instanceof',
+                    'others',
+                    'return',
+                    'yield',
+                    'yield_from',
+                ],
+            ],
+            'trailing_comma_in_multiline' => [
+                'after_heredoc' => true,
+                'elements' => ['arguments', 'array_destructuring', 'arrays', 'match', 'parameters'],
+            ],
 
             'date_time_immutable'              => true,
             'no_unset_on_property'             => false,
@@ -143,7 +161,7 @@ final class DefaultSet implements RuleSetDefinitionInterface
     }
 
     /**
-     * Declares that the preserved preset includes behavior-changing rules.
+     * Declares that the preset includes behavior-changing rules.
      *
      * @return bool true because the preset intentionally includes risky rules
      */

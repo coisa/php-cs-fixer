@@ -20,6 +20,9 @@ use CoiSA\PhpCsFixer\RuleSet\DefaultSet;
 use CoiSA\PhpCsFixer\Tests\FilesystemTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
+/**
+ * @internal
+ */
 #[CoversClass(HeaderExtractor::class)]
 final class HeaderExtractorTest extends FilesystemTestCase
 {

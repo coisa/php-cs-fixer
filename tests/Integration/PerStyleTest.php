@@ -24,10 +24,13 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\RequiresPhp;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 #[CoversClass(DefaultSet::class)]
 final class PerStyleTest extends TestCase
 {
-    #[DataProvider('per31Examples')]
+    #[DataProvider('provideFormatsAvailablePer31RulesCases')]
     public function testFormatsAvailablePer31Rules(string $input, string $expected): void
     {
         $formatted = $this->format($input);
@@ -36,27 +39,41 @@ final class PerStyleTest extends TestCase
         self::assertSame($formatted, $this->format($formatted));
     }
 
-    public static function per31Examples(): iterable
+    public static function provideFormatsAvailablePer31RulesCases(): iterable
     {
         yield 'case braces removed' => [
             "<?php\nswitch (\$value) {\n    case 1: {\n        break;\n    }\n}",
             "case 1:\n        break;",
         ];
+
         yield 'private enum constants' => [
             '<?php enum Example { case One; protected const Hidden = self::One; }',
             'private const Hidden = self::One;',
         ];
+
         yield 'clone parentheses retained' => [
             '<?php $copy = clone($original);',
             'clone($original)',
         ];
+
         yield 'multiline case parentheses retained' => [
             "<?php switch (true) { case (\n\$first\n&& \$second\n): break; }",
             "case (\n",
         ];
+
         yield 'array bracket remains with return' => [
             "<?php return [\n'first',\n'second',\n];",
             "return [\n",
+        ];
+
+        yield 'multiline arguments retain PER trailing commas' => [
+            "<?php example(\n1,\n2\n);",
+            "2,\n);",
+        ];
+
+        yield 'multiline parameters retain PER trailing commas' => [
+            "<?php function example(\nint \$first,\nint \$second\n): void {}",
+            "int \$second,\n",
         ];
     }
 

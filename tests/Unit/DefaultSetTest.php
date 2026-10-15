@@ -105,8 +105,8 @@ final class DefaultSetTest extends TestCase
         self::assertFalse($rules['mb_str_functions']);
         self::assertFalse($rules['no_unset_on_property']);
         self::assertFalse($rules['no_trailing_whitespace_in_string']);
-        self::assertArrayNotHasKey('@PhpCsFixer', $rules);
-        self::assertArrayNotHasKey('@PhpCsFixer:risky', $rules);
+        self::assertTrue($rules['@PhpCsFixer']);
+        self::assertTrue($rules['@PhpCsFixer:risky']);
         self::assertArrayNotHasKey('@DoctrineAnnotation', $rules);
         self::assertArrayNotHasKey('@auto:risky', $rules);
         self::assertArrayNotHasKey('@PHP8x3Migration', $rules);
@@ -114,28 +114,38 @@ final class DefaultSetTest extends TestCase
         self::assertArrayNotHasKey('@PHPUnit8x4Migration:risky', $rules);
     }
 
-    #[DataProvider('copyrightYears')]
+    #[DataProvider('provideRefreshesCopyrightYearsWithoutChangingOtherDatesCases')]
     public function testRefreshesCopyrightYearsWithoutChangingOtherDates(string $input, string $expected): void
     {
         self::assertSame($expected, (new DefaultSet($input))->getRules()['header_comment']['header']);
     }
 
-    public static function copyrightYears(): iterable
+    public static function provideRefreshesCopyrightYearsWithoutChangingOtherDatesCases(): iterable
     {
         $year = date('Y');
         $past = (string) ((int) $year - 2);
         $future = (string) ((int) $year + 1);
 
         yield 'stale range' => ['Copyright (c) 2020-2021 Example', 'Copyright (c) 2020-' . $year . ' Example'];
+
         yield 'spaced range' => ['Copyright 2020 – 2021 Example', 'Copyright 2020-' . $year . ' Example'];
+
         yield 'single creation year' => ['Copyright ' . $past . ' Example', 'Copyright ' . $past . '-' . $year . ' Example'];
+
         yield 'same year range' => ['Copyright ' . $year . '-' . $year . ' Example', 'Copyright ' . $year . ' Example'];
+
         yield 'copyright tag' => ['@copyright ' . $past . ' Example', '@copyright ' . $past . '-' . $year . ' Example'];
+
         yield 'copyright symbol' => ['Copyright © ' . $past . ' Example', 'Copyright © ' . $past . '-' . $year . ' Example'];
+
         yield 'placeholder' => ['Copyright 2020-%year% Example', 'Copyright 2020-' . $year . ' Example'];
+
         yield 'future start is preserved' => ['Copyright ' . $future . ' Example', 'Copyright ' . $future . ' Example'];
+
         yield 'other dates are preserved' => ['Released 2020-2021, reviewed 2022', 'Released 2020-2021, reviewed 2022'];
+
         yield 'literal same-year date is preserved' => ['Released ' . $year . '-' . $year, 'Released ' . $year . '-' . $year];
+
         yield 'full calendar date is preserved' => ['Copyright 2020-01-15 Example', 'Copyright 2020-01-15 Example'];
     }
 }
