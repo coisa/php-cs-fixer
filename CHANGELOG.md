@@ -10,6 +10,7 @@ and releases use [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 
 - Static `HeaderExtractor` methods to read the configuration's opening block comment without executing it.
+- An explicit `ext-tokenizer` requirement for header extraction.
 - PHPUnit 12.5 unit and integration suites covering configuration isolation, headers, overrides, exclusions, CLI behavior and idempotency, with a PHP 8.3–8.5 dependency matrix.
 - A read-only reusable workflow for changed PR PHP files that preserves the caller's Finder scope and disables Composer plugins and scripts.
 - Weekly Dependabot updates for Composer dependencies and GitHub Actions.
