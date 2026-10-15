@@ -1,0 +1,22 @@
+# Changelog
+
+## Unreleased — next major
+
+- Require PHP 8.3+ and PHP CS Fixer ^3.95.25, removing the forced PHP 7.4 platform.
+- Implement the current public rule-set definition interface and use a valid
+  namespaced preset identifier, `@CoiSA/default`.
+- Register definitions on each configuration through the supported API, preserving
+  independent header/rule choices without reflection or constructor global mutation.
+- Retain explicit global registration through the public API; duplicate names fail.
+- Target PHP 8.3 consistently, use current migration/rule names and preserve the
+  existing risky CoiSA policy and application-last overrides.
+- Fix !directory exclusions being skipped by the existence check.
+- Normalize raw, single-line and multiline PHPDoc headers, including the nonempty header `0`.
+- Add bounded CLI/behavior/idempotency regressions and a PHP 8.3–8.5 dependency matrix.
+- Refresh migration, header, override, risk and package-distribution guidance.
+- Target PER 3.1 with versioned PER 3.0 tooling and an explicit manual delta checklist;
+  remove inherited formatting overrides and the fixed PHPUnit 8.4 migration.
+- Provide a read-only reusable workflow for changed PR PHP files, preserving caller
+  Finder scope and disabling Composer plugins/scripts.
+
+Published 2.1.0 predates this major. This branch has not been released.

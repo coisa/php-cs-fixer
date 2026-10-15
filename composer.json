@@ -10,8 +10,8 @@
         }
     ],
     "require": {
-        "php": "^7.4 || ^8.0",
-        "friendsofphp/php-cs-fixer": "^3.8"
+        "php": "^8.3",
+        "friendsofphp/php-cs-fixer": "^3.95.25"
     },
     "minimum-stability": "stable",
     "autoload": {
@@ -19,12 +19,9 @@
             "CoiSA\\PhpCsFixer\\": "src"
         }
     },
-    "config": {
-        "platform": {
-            "php": "7.4"
-        }
-    },
     "scripts": {
+        "check": ["@test", "@cs-check"],
+        "test": "@php tests/run.php",
         "cs-check": "php-cs-fixer fix --dry-run --diff",
         "cs-fix": "php-cs-fixer fix"
     }

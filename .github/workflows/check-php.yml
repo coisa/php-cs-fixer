@@ -1,0 +1,79 @@
+name: Check changed PHP files
+
+on:
+  workflow_call:
+    inputs:
+      php-version:
+        description: PHP version compatible with the caller's dependencies
+        type: string
+        default: '8.3'
+      working-directory:
+        description: Composer project directory, relative to the checkout
+        type: string
+        default: '.'
+      config:
+        description: PHP CS Fixer configuration relative to the project directory
+        type: string
+        default: '.php-cs-fixer.dist.php'
+      base-sha:
+        description: Optional immutable base commit; defaults to the PR base
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45 # v2
+        with:
+          php-version: ${{ inputs.php-version }}
+          coverage: none
+          tools: composer:v2
+      - name: Install the caller's development tooling
+        working-directory: ${{ inputs.working-directory }}
+        run: composer install --no-plugins --no-scripts --no-interaction --prefer-dist --no-progress
+      - name: Check changed PHP files within the caller's Finder scope
+        env:
+          STYLE_BASE: ${{ inputs.base-sha || github.event.pull_request.base.sha }}
+          STYLE_DIRECTORY: ${{ inputs.working-directory }}
+          STYLE_CONFIG: ${{ inputs.config }}
+        run: |
+          python3 - <<'PY'
+          import os
+          import pathlib
+          import re
+          import subprocess
+          base = os.environ["STYLE_BASE"]
+          if not re.fullmatch(r"[a-fA-F0-9]{40}", base):
+              raise SystemExit("Use a pull_request event or supply an immutable base-sha.")
+          root = pathlib.Path.cwd().resolve()
+          project = (root / os.environ["STYLE_DIRECTORY"]).resolve()
+          if not project.is_relative_to(root):
+              raise SystemExit("working-directory must remain within the checkout.")
+          changed = subprocess.check_output([
+              "git", "diff", "--name-only", "--diff-filter=ACMRT", "-z",
+              base + "...HEAD", "--", "*.php",
+          ])
+          files = []
+          for value in changed.split(b"\0"):
+              if not value:
+                  continue
+              path = root / os.fsdecode(value)
+              if path.is_file() and path.resolve().is_relative_to(project):
+                  files.append(str(path.relative_to(project)))
+          if not files:
+              print("No changed PHP files within the project.")
+          else:
+              command = ["php", "vendor/bin/php-cs-fixer", "fix", "--dry-run", "--diff",
+                         "--path-mode=intersection", "--config=" + os.environ["STYLE_CONFIG"],
+                         "--", *files]
+              raise SystemExit(subprocess.run(command, cwd=project, check=False).returncode)
+          PY
