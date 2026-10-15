@@ -22,7 +22,7 @@
     "scripts": {
         "check": ["@test", "@cs-check"],
         "test": "@php tests/run.php",
-        "cs-check": "php-cs-fixer fix --dry-run --diff",
+        "cs-check": "php-cs-fixer fix --dry-run --diff --using-cache=no",
         "cs-fix": "php-cs-fixer fix"
     }
 }
