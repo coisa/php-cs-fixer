@@ -52,9 +52,21 @@ final class CustomSet implements RuleSetDefinitionInterface
         } elseif ('' === $wrapped) {
             $header = '';
         }
-        $year         = date('Y');
-        $header       = str_replace('%year%', $year, $header);
-        $this->header = str_replace($year . '-' . $year, $year, $header);
+        $year = date('Y');
+        $header = str_replace(['%year%-%year%', $year . '-%year%', '%year%-' . $year], '%year%', $header);
+        $header = str_replace('%year%', $year, $header);
+        $header = preg_replace_callback(
+            '/(\bcopyright[\t ]+(?:(?:\(c\)|©)[\t ]+)?)(\d{4})(?:[\t ]*(?:-|–)[\t ]*(\d{4}))?\b(?![\t ]*(?:-|–)[\t ]*\d)/i',
+            static function (array $match) use ($year): string {
+                if ((int) $match[2] > (int) $year) {
+                    return $match[0];
+                }
+
+                return $match[1] . $match[2] . ($match[2] === $year ? '' : '-' . $year);
+            },
+            $header,
+        ) ?? $header;
+        $this->header = $header;
     }
 
     /**
@@ -68,20 +80,18 @@ final class CustomSet implements RuleSetDefinitionInterface
     }
 
     /**
-     * Returns rules targeting the fixed PHP 8.3 minimum on every host runtime.
+     * Returns rules following the consumer's Composer PHP minimum and current PER.
      *
      * @return array<string, array<string, mixed>|bool> nested presets and explicit rules
      */
     public function getRules(): array
     {
         $rules = [
-            '@DoctrineAnnotation'        => true,
-            '@PHP8x3Migration'           => true,
-            '@PHP8x3Migration:risky'     => true,
-            '@PhpCsFixer'                => true,
-            '@PhpCsFixer:risky'          => true,
-            '@PER-CS3x0'                 => true,
-            '@PER-CS3x0:risky'           => true,
+            '@auto'                           => true,
+            '@autoPHPMigration:risky'          => true,
+            // PER 3.1 additions not selected by the current PER 3.0 base.
+            'no_unneeded_braces'               => true,
+            'protected_to_private'             => true,
             'date_time_immutable'              => true,
             'no_unset_on_property'             => false,
             'no_trailing_whitespace_in_string' => false,

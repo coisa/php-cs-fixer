@@ -90,19 +90,52 @@ final class CustomSetTest extends TestCase
         );
     }
 
-    public function testTargetsPhp83AndTheVersionedPerStyleWithRiskyRules(): void
+    public function testUsesAutomaticProjectMigrationsWithExplicitPer31Policies(): void
     {
         $set = new CustomSet();
         $rules = $set->getRules();
 
         self::assertSame('@CoiSA/default', $set->getName());
         self::assertTrue($set->isRisky());
-        self::assertTrue($rules['@PHP8x3Migration']);
-        self::assertTrue($rules['@PHP8x3Migration:risky']);
-        self::assertTrue($rules['@PER-CS3x0']);
-        self::assertTrue($rules['@PER-CS3x0:risky']);
+        self::assertTrue($rules['@auto']);
+        self::assertTrue($rules['@autoPHPMigration:risky']);
+        self::assertTrue($rules['no_unneeded_braces']);
+        self::assertTrue($rules['protected_to_private']);
         self::assertTrue($rules['date_time_immutable']);
+        self::assertFalse($rules['mb_str_functions']);
+        self::assertFalse($rules['no_unset_on_property']);
+        self::assertFalse($rules['no_trailing_whitespace_in_string']);
+        self::assertArrayNotHasKey('@PhpCsFixer', $rules);
+        self::assertArrayNotHasKey('@PhpCsFixer:risky', $rules);
+        self::assertArrayNotHasKey('@DoctrineAnnotation', $rules);
+        self::assertArrayNotHasKey('@auto:risky', $rules);
+        self::assertArrayNotHasKey('@PHP8x3Migration', $rules);
         self::assertArrayNotHasKey('@PHP8x4Migration', $rules);
         self::assertArrayNotHasKey('@PHPUnit8x4Migration:risky', $rules);
+    }
+
+    #[DataProvider('copyrightYears')]
+    public function testRefreshesCopyrightYearsWithoutChangingOtherDates(string $input, string $expected): void
+    {
+        self::assertSame($expected, (new CustomSet($input))->getRules()['header_comment']['header']);
+    }
+
+    public static function copyrightYears(): iterable
+    {
+        $year = date('Y');
+        $past = (string) ((int) $year - 2);
+        $future = (string) ((int) $year + 1);
+
+        yield 'stale range' => ['Copyright (c) 2020-2021 Example', 'Copyright (c) 2020-' . $year . ' Example'];
+        yield 'spaced range' => ['Copyright 2020 – 2021 Example', 'Copyright 2020-' . $year . ' Example'];
+        yield 'single creation year' => ['Copyright ' . $past . ' Example', 'Copyright ' . $past . '-' . $year . ' Example'];
+        yield 'same year range' => ['Copyright ' . $year . '-' . $year . ' Example', 'Copyright ' . $year . ' Example'];
+        yield 'copyright tag' => ['@copyright ' . $past . ' Example', '@copyright ' . $past . '-' . $year . ' Example'];
+        yield 'copyright symbol' => ['Copyright © ' . $past . ' Example', 'Copyright © ' . $past . '-' . $year . ' Example'];
+        yield 'placeholder' => ['Copyright 2020-%year% Example', 'Copyright 2020-' . $year . ' Example'];
+        yield 'future start is preserved' => ['Copyright ' . $future . ' Example', 'Copyright ' . $future . ' Example'];
+        yield 'other dates are preserved' => ['Released 2020-2021, reviewed 2022', 'Released 2020-2021, reviewed 2022'];
+        yield 'literal same-year date is preserved' => ['Released ' . $year . '-' . $year, 'Released ' . $year . '-' . $year];
+        yield 'full calendar date is preserved' => ['Copyright 2020-01-15 Example', 'Copyright 2020-01-15 Example'];
     }
 }

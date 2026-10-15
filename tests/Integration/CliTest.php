@@ -17,6 +17,7 @@ namespace CoiSA\PhpCsFixer\Tests\Integration;
 
 use CoiSA\PhpCsFixer\Tests\FilesystemTestCase;
 use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\RequiresPhp;
 use Symfony\Component\Process\Process;
 
 /**
@@ -35,13 +36,14 @@ final class CliTest extends FilesystemTestCase
     {
         parent::setUp();
 
+        $this->writeFile('composer.json', '{"require":{"php":"^8.3"}}');
         $this->fixture = $this->writeFile('input/file with spaces.php', self::INPUT);
         $this->excluded = $this->writeFile('input/excluded/untouched.php', self::INPUT);
-        $this->config = $this->writeFile('config.php', "<?php\nrequire "
+        $this->config = $this->writeFile('config.php', "<?php\n/** Synthetic header %year% */\nrequire "
             . var_export(\dirname(__DIR__, 2) . '/vendor/autoload.php', true)
             . ";\nreturn CoiSA\\PhpCsFixer\\PhpCsFixer::create("
             . var_export([$this->directory . '/input', '!excluded'], true)
-            . ", '/** Synthetic header %year% */');\n");
+            . ", (new CoiSA\\PhpCsFixer\\HeaderExtractor())->extractFromFile(__FILE__));\n");
     }
 
     public function testDryRunReportsChangesWithoutWritingFiles(): void
@@ -123,10 +125,24 @@ final class CliTest extends FilesystemTestCase
         $process = $this->fix();
         self::assertSame(0, $process->getExitCode(), $process->getOutput() . $process->getErrorOutput());
         self::assertStringContainsString('new DateTimeImmutable(', file_get_contents($this->fixture));
+        self::assertStringContainsString('(new DateTimeImmutable(', file_get_contents($this->fixture));
 
         $execution = $this->runPhp([$this->fixture]);
         self::assertSame(0, $execution->getExitCode(), $execution->getErrorOutput());
         self::assertSame('2000-01-01', $execution->getOutput());
+    }
+
+    #[RequiresPhp('>=8.4.0')]
+    public function testUsesTheConsumersHigherPhpMinimumForMigrations(): void
+    {
+        $this->writeFile('composer.json', '{"require":{"php":"^8.4"}}');
+        file_put_contents($this->fixture, '<?php echo (new DateTimeImmutable("2000-01-01"))->format("Y-m-d");');
+
+        $process = $this->fix();
+
+        self::assertSame(0, $process->getExitCode(), $process->getOutput() . $process->getErrorOutput());
+        self::assertStringNotContainsString('(new DateTimeImmutable(', file_get_contents($this->fixture));
+        self::assertStringContainsString('new DateTimeImmutable(', file_get_contents($this->fixture));
     }
 
     private function fix(string ...$arguments): Process
