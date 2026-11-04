@@ -121,12 +121,12 @@ and releases use [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Opinionated formatting and risky rules, plus optional PHPDoc headers with `%year%` substitution.
 - Composer dependencies on PHP `>=5.3` and PHP CS Fixer `>=2.2`.
 
-[3.0.1]: https://github.com/coisa/php-cs-fixer/compare/3.0.0...3.0.1
-[3.0.0]: https://github.com/coisa/php-cs-fixer/compare/2.1.0...3.0.0
-[2.1.0]: https://github.com/coisa/php-cs-fixer/compare/2.0.0...2.1.0
-[2.0.0]: https://github.com/coisa/php-cs-fixer/compare/1.0.4...2.0.0
-[1.0.4]: https://github.com/coisa/php-cs-fixer/compare/1.0.3...1.0.4
-[1.0.3]: https://github.com/coisa/php-cs-fixer/compare/1.0.2...1.0.3
-[1.0.2]: https://github.com/coisa/php-cs-fixer/compare/1.0.1...1.0.2
-[1.0.1]: https://github.com/coisa/php-cs-fixer/compare/1.0.0...1.0.1
-[1.0.0]: https://github.com/coisa/php-cs-fixer/releases/tag/1.0.0
+[3.0.1]: https://github.com/artificenerd/php-cs-fixer/compare/3.0.0...3.0.1
+[3.0.0]: https://github.com/artificenerd/php-cs-fixer/compare/2.1.0...3.0.0
+[2.1.0]: https://github.com/artificenerd/php-cs-fixer/compare/2.0.0...2.1.0
+[2.0.0]: https://github.com/artificenerd/php-cs-fixer/compare/1.0.4...2.0.0
+[1.0.4]: https://github.com/artificenerd/php-cs-fixer/compare/1.0.3...1.0.4
+[1.0.3]: https://github.com/artificenerd/php-cs-fixer/compare/1.0.2...1.0.3
+[1.0.2]: https://github.com/artificenerd/php-cs-fixer/compare/1.0.1...1.0.2
+[1.0.1]: https://github.com/artificenerd/php-cs-fixer/compare/1.0.0...1.0.1
+[1.0.0]: https://github.com/artificenerd/php-cs-fixer/releases/tag/1.0.0
